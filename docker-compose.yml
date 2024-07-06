@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  frontend:
+  vite-frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -10,7 +8,7 @@ services:
     ports:
       - "3000:80"
 
-  backend:
+  flask-backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -21,7 +19,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://app:xtasy@db:5432/mydatabase
 
-  db:
+  fullstack-db:
     image: postgres:13
     container_name: db
     restart: always
@@ -30,14 +28,14 @@ services:
       POSTGRES_PASSWORD: xtasy
       POSTGRES_DB: app
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - my-app-db-data:/var/lib/postgresql/data
 
   adminer:
-    image: adminer
-    container_name: adminer
-    restart: always
-    ports:
-      - "8080:8080"
+      image: adminer
+      container_name: adminer
+      restart: always
+      ports:
+        - "8080:8080"
 
   proxy:
     image: traefik:v2.5
@@ -60,4 +58,4 @@ services:
       - "./letsencrypt:/letsencrypt"
 
 volumes:
-  postgres_data:
+  my-app-db-data:

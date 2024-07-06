@@ -5,11 +5,6 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-RUN npm config set fetch-retries 5 && \
-    npm config set fetch-retry-factor 10 && \
-    npm config set fetch-retry-mintimeout 30000 && \
-    npm config set fetch-retry-maxtimeout 120000
-
 RUN npm install
 
 COPY . .
@@ -20,8 +15,7 @@ RUN npm run build
 FROM nginx:alpine
 
 COPY --from=build /app/build /usr/share/nginx/html
-
-#COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY deployment/nginx.default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
