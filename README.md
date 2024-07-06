@@ -18,3 +18,14 @@ To get started with this template, please follow the instructions in the respect
 - [Frontend README](./frontend/README.md)
 - [Backend README](./backend/README.md)
 
+# Docker
+If you have docker compose on the machine, run the command below in the root directory of the project to get it started:
+
+```bash
+https://github.com/xtasysensei/fullstack-devops.git
+
+cd fullstack-devops
+
+docker-compose up -d
+```
+

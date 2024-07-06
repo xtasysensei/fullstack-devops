@@ -7,6 +7,10 @@ services:
     restart: always
     ports:
       - "3000:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vite-frontend.rule=Host(`13.49.68.54`) && PathPrefix(`/`)"
+      - "traefik.http.services.vite-frontend.loadbalancer.server.port=80"
 
   flask-backend:
     build:
@@ -17,7 +21,11 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://app:xtasy@db:5432/mydatabase
+      - DATABASE_URL=postgresql://app:xtasy@db:5432/app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flask-backend.rule=Host(`13.49.68.54`) && PathPrefix(`/api`)"
+      - "traefik.http.services.flask-backend.loadbalancer.server.port=8000"
 
   fullstack-db:
     image: postgres:13
@@ -36,6 +44,10 @@ services:
       restart: always
       ports:
         - "8080:8080"
+      labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adminer.rule=Host(`db.yourdomain.com`)"
+      - "traefik.http.services.adminer.loadbalancer.server.port=8080"
 
   proxy:
     image: traefik:v2.5
@@ -56,6 +68,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./letsencrypt:/letsencrypt"
+      - "./traefik/traefik.yml:/etc/traefik/traefik.yml"
 
 volumes:
   my-app-db-data:

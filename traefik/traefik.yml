@@ -1,0 +1,41 @@
+http:
+  routers:
+    frontend:
+      rule: "Host(`13.49.68.54`)"
+      entrypoints:
+        - web
+      service: frontend
+
+    backend:
+      rule: "Host(`13.49.68.54`) && (PathPrefix(`/api`) || PathPrefix(`/docs`))"
+      entrypoints:
+        - web
+      service: backend
+
+    adminer:
+      rule: "Host(`db.13.49.68.54`)"
+      entrypoints:
+        - web
+      service: adminer
+
+    traefik:
+      rule: "Host(`proxy.13.49.68.54`)"
+      entrypoints:
+        - web
+      service: api@internal
+
+  services:
+    frontend:
+      loadBalancer:
+        servers:
+          - url: "http://frontend:80"
+
+    backend:
+      loadBalancer:
+        servers:
+          - url: "http://backend:8000"
+
+    adminer:
+      loadBalancer:
+        servers:
+          - url: "http://adminer:8080"
